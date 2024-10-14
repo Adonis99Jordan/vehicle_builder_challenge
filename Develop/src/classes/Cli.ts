@@ -30,28 +30,23 @@ class Cli {
   }
 
   // method to choose a vehicle from existing vehicles
-  chooseVehicle(): void {
-    inquirer
-      .prompt([
+  async chooseVehicle(): Promise<void> {
+    const choices = this.vehicles.map(vehicle => ({
+      name: `${vehicle.make} ${vehicle.model} (${vehicle.vin})`,
+      value: vehicle.vin
+    }));
+    const answers = await inquirer.prompt([
         {
           type: 'list',
           name: 'selectedVehicleVin',
           message: 'Select a vehicle to perform an action on',
-          choices: this.vehicles.map((vehicle) => {
-            return {
-              name: `${vehicle.vin} -- ${vehicle.make} ${vehicle.model}`,
-              value: vehicle.vin,
-            };
-          }),
-        },
-      ])
-      .then((answers) => {const vehicleToTow = this.vehicles.find(vehicle => vehicle.vin == answers.vehicleToTow);
-
-        // set the selectedVehicleVin to the vin of the selected vehicle
-        this.selectedVehicleVin = answers.selectedVehicleVin;
-        // perform actions on the selected vehicle
-        this.performActions();
-      });
+          choices: choices
+        }
+      ]);
+       // set the selectedVehicleVin to the vin of the selected vehicle
+       this.selectedVehicleVin = answers.selectedVehicleVin;
+       // perform actions on the selected vehicle
+       this.performActions();
   }
 
   // method to create a vehicle
@@ -174,11 +169,8 @@ class Cli {
           message: 'Enter Towing Capacity',
         },
       ])
-      .then((answers: { color: string, make: string, model: string, year: number, weight: number, topSpeed: string, towingCapacity: string }) => {
-        // const wheel1 = new Wheel();
-        // const wheel2 = new Wheel();
-        // const wheel3 = new Wheel();
-        // const wheel4 = new Wheel();
+      .then((answers: {color: string, make: string, model: string, year: number, weight: number, topSpeed: string, towingCapacity: string}) => {
+        const towingCapacity = Number(answers.towingCapacity);
         // TODO: Use the answers object to pass the required properties to the Truck constructor
         const newTruck = new Truck(
           Cli.generateVin(),
@@ -196,7 +188,7 @@ class Cli {
         // TODO: set the selectedVehicleVin to the vin of the truck
         this.selectedVehicleVin = newTruck.vin;
         // TODO: perform actions on the truck
-        console.log(`New truck created with VIN: ${newTruck.vin}`);
+        console.log(`New truck created: ${newTruck.make} ${newTruck.model} (${newTruck.vin})`);
       });
   }
 

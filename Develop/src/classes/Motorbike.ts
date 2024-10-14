@@ -34,7 +34,12 @@ class Motorbike extends Vehicle {
   ) {
     super(vin, make, model, year, weight);
 
+    this.vin = vin;
     this.color = color;
+    this.make = make;
+    this.model = model;
+    this.year = year;
+    this.weight = weight;
     this.topSpeed = topSpeed;
     this.wheels = wheels.length === 2 ? wheels : [new Wheel(), new Wheel()];
   }
@@ -60,7 +65,7 @@ class Motorbike extends Vehicle {
   }
 }
 
-const ninja = new Motorbike();
+const ninja = new Motorbike('JH2SC5907EK000000', 'Green', 'Kawasaki', 'Ninja', 2021, 200, 200, 180, [new Wheel(), new Wheel()]);
 
 ninja.printDetails();
 ninja.wheelie();
